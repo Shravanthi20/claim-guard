@@ -1,0 +1,154 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  CUSTOMER
+  INVESTIGATOR
+  ADMIN
+}
+
+enum ClaimStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  ADDITIONAL_INFO_REQUIRED
+  APPROVED
+  REJECTED
+}
+
+enum InvestigationStatus {
+  OPEN
+  IN_PROGRESS
+  ADDITIONAL_INFO_REQUIRED
+  COMPLETED
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model User {
+  id          String   @id @default(uuid())
+  cognitoSub  String?  @unique
+  name        String
+  email       String   @unique
+  role        UserRole @default(CUSTOMER)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  policies          Policy[]
+  claims            Claim[]
+  investigations    Investigation[] @relation("InvestigatorClaims")
+  investigationNotes InvestigationNote[]
+}
+
+model Policy {
+  id          String   @id @default(uuid())
+  policyNumber String  @unique
+  type        String
+  coverageAmount Float
+  startDate   DateTime
+  endDate     DateTime
+  createdAt   DateTime @default(now())
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+
+  claims      Claim[]
+}
+
+model Claim {
+  id              String      @id @default(uuid())
+  claimNumber     String      @unique
+  title           String
+  description     String
+  claimedAmount   Float
+  status          ClaimStatus @default(SUBMITTED)
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  userId          String
+  user            User        @relation(fields: [userId], references: [id])
+
+  policyId        String?
+  policy          Policy?     @relation(fields: [policyId], references: [id])
+
+  evidence        Evidence[]
+  investigation   Investigation?
+  riskAssessment  RiskAssessment?
+  events          ClaimEvent[]
+}
+
+model Evidence {
+  id          String   @id @default(uuid())
+  fileName    String
+  fileType    String
+  s3Key       String?
+  description String?
+  uploadedAt  DateTime @default(now())
+
+  claimId     String
+  claim       Claim    @relation(fields: [claimId], references: [id], onDelete: Cascade)
+}
+
+model Investigation {
+  id          String             @id @default(uuid())
+  status      InvestigationStatus @default(OPEN)
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  claimId     String             @unique
+  claim       Claim              @relation(fields: [claimId], references: [id], onDelete: Cascade)
+
+  investigatorId String?
+  investigator   User?            @relation("InvestigatorClaims", fields: [investigatorId], references: [id])
+
+  notes       InvestigationNote[]
+}
+
+model InvestigationNote {
+  id             String        @id @default(uuid())
+  content        String
+  createdAt      DateTime      @default(now())
+
+  investigationId String
+  investigation   Investigation @relation(fields: [investigationId], references: [id], onDelete: Cascade)
+
+  investigatorId String
+  investigator   User          @relation(fields: [investigatorId], references: [id])
+}
+
+model RiskAssessment {
+  id              String    @id @default(uuid())
+  riskLevel       RiskLevel
+  riskScore       Float
+  fraudProbability Float?
+  modelVersion    String?
+  riskFactors     Json?
+  aiProcessingStatus String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  claimId         String    @unique
+  claim           Claim     @relation(fields: [claimId], references: [id], onDelete: Cascade)
+}
+
+model ClaimEvent {
+  id          String   @id @default(uuid())
+  eventType   String
+  description String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  claimId     String
+  claim       Claim    @relation(fields: [claimId], references: [id], onDelete: Cascade)
+}

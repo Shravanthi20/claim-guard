@@ -1,0 +1,30 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: claimguard-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://claimguard:claimguard@postgres:5432/claimguard?schema=public
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16
+    container_name: claimguard-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: claimguard
+      POSTGRES_PASSWORD: claimguard
+      POSTGRES_DB: claimguard
+    ports:
+      - "5433:5432"
+    volumes:
+      - claimguard_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  claimguard_postgres_data:

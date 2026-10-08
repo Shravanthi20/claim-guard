@@ -1,0 +1,8 @@
+{
+  "name": "lambda-result-writer",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "pg": "8.23.1"
+  }
+}

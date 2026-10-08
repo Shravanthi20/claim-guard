@@ -1,0 +1,13 @@
+**/.env
+**/.env.*
+!**/.env.example
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+*.log
+*.zip
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json

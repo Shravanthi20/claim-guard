@@ -1,0 +1,2 @@
+claim_id,claim_number,claimed_amount,risk_level,risk_score,fraud_probability,model_version,ai_processing_status
+ef4ff9f7-6f70-4f8f-9dae-2524b9d4b0fa,CLM-1791380366513,150000,LOW,1.465720683336258,0.01465720683336258,xgboost-v1,COMPLETED

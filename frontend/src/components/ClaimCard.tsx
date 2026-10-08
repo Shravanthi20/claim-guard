@@ -1,0 +1,3 @@
+import { Link } from "react-router-dom";
+import type { Claim } from "../types";
+export default function ClaimCard({ claim }: { claim: Claim }) { const risk = claim.riskAssessment?.riskLevel; return <Link className="claim-card" to={`claims/${claim.id}`}><div className="row"><strong>{claim.claimNumber || claim.id}</strong><span className={`status ${claim.status.toLowerCase()}`}>{claim.status.replaceAll("_", " ")}</span></div><h3>{claim.title}</h3><p className="muted">{claim.description || "No description provided"}</p><div className="row muted"><span>₹{Number(claim.claimedAmount).toLocaleString("en-IN")}</span>{risk && <span className={`risk ${risk.toLowerCase()}`}>{risk} risk</span>}</div></Link>; }
