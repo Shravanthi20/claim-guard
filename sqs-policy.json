@@ -1,0 +1,24 @@
+{
+  "Version": "2012-10-17",
+  "Id": "sqspolicy",
+  "Statement": [
+    {
+      "Sid": "__owner_statement",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::721194821024:root"
+      },
+      "Action": "SQS:*",
+      "Resource": "arn:aws:sqs:us-east-1:721194821024:claimguard-ai-processing"
+    },
+    {
+      "Sid": "AllowEventBridge",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "events.amazonaws.com"
+      },
+      "Action": "sqs:SendMessage",
+      "Resource": "arn:aws:sqs:us-east-1:721194821024:claimguard-ai-processing"
+    }
+  ]
+}

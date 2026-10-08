@@ -1,9 +1,9 @@
 import {
-  EventBridgeV2Client,
+  EventBridgeClient,
   PutEventsCommand,
-} from "@aws-sdk/client-eventbridgev2";
+} from "@aws-sdk/client-eventbridge";
 
-const eventBridge = new EventBridgeV2Client({
+const eventBridge = new EventBridgeClient({
   region: process.env.AWS_REGION,
 });
 
@@ -20,18 +20,20 @@ export const publishEvidenceUploadedEvent = async (
     evidenceCount: number;
   }
 ) => {
+  // Publishes to the default bus matching the existing EventBridge rule:
+  // source: "claimguard.api", detail-type: "ClaimSubmitted"
+  // which routes → SQS claimguard-ai-processing → claimguard-processor-dev → Step Functions
   const command = new PutEventsCommand({
-    EventBusArn: process.env.EVENT_BUS_ARN!,
     Entries: [
       {
-        Source: "claimguard",
-        DetailType: "EvidenceUploaded",
+        EventBusName: "default",
+        Source: "claimguard.api",
+        DetailType: "ClaimSubmitted",
         Detail: JSON.stringify({
           claimId,
           evidenceId,
           s3Key,
           fileType,
-
           mlFeatures,
         }),
       },
@@ -44,8 +46,8 @@ export const publishEvidenceUploadedEvent = async (
     response.FailedEntryCount &&
     response.FailedEntryCount > 0
   ) {
-    throw new Error("Failed to publish EvidenceUploaded event");
+    throw new Error("Failed to publish ClaimSubmitted event");
   }
 
   return response;
-};
+};

@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@aws-sdk/client-eventbridge": "^3.1147.0"
+  }
+}

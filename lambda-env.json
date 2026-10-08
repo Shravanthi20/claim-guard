@@ -1,0 +1,11 @@
+{
+  "Variables": {
+    "DATABASE_URL": "postgresql://claimguard:Claimguard_123@claimguard-postgres.cvm3eebajmti.us-east-1.rds.amazonaws.com:5432/claimguard?schema=public&uselibpqcompat=true&sslmode=require",
+    "MODEL_WEIGHT": "0.6",
+    "REKOGNITION_WEIGHT": "0.4",
+    "RISK_THRESHOLDS_JSON": "{\"lowMaximum\":0.3,\"mediumMaximum\":0.7}",
+    "REKOGNITION_LABEL_WEIGHTS_JSON": "{\"Car Front - Damaged\":1.0,\"Scratch\":0.5,\"Totaled\":1.0}",
+    "AI_MODEL_VERSION": "1.0",
+    "MODEL_PROBABILITY_SCALE": "0_1"
+  }
+}
