@@ -92,20 +92,25 @@ export const uploadEvidence = async (
 
     const evidenceCount = claim.evidence.length + 1;
 
-    // 4. Publish enriched EventBridge event
-    await publishEvidenceUploadedEvent(
-      claimId,
-      evidence.id,
-      key,
-      file.mimetype,
-      {
-        claimAmount: claim.claimedAmount,
-        claimAgeDays,
-        previousClaims,
-        policyAgeDays,
-        evidenceCount,
-      }
-    );
+    // 4. Publish enriched EventBridge event (non-fatal: the evidence is already
+    // stored in S3 and the DB, so a publish failure should not fail the upload)
+    try {
+      await publishEvidenceUploadedEvent(
+        claimId,
+        evidence.id,
+        key,
+        file.mimetype,
+        {
+          claimAmount: claim.claimedAmount,
+          claimAgeDays,
+          previousClaims,
+          policyAgeDays,
+          evidenceCount,
+        }
+      );
+    } catch (publishError) {
+      console.error("EventBridge publish error (AI analysis not triggered):", publishError);
+    }
 
     // 5. Record event in database
     await prisma.claimEvent.create({

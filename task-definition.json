@@ -1,0 +1,42 @@
+{
+  "family": "claimguard-backend",
+  "executionRoleArn": "arn:aws:iam::721194821024:role/LabRole",
+  "taskRoleArn": "arn:aws:iam::721194821024:role/LabRole",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "containerDefinitions": [
+    {
+      "name": "claimguard-backend",
+      "image": "721194821024.dkr.ecr.us-east-1.amazonaws.com/claimguard-backend:latest",
+      "portMappings": [
+        {
+          "containerPort": 5000,
+          "hostPort": 5000,
+          "protocol": "tcp",
+          "name": "claimguard-backend-5000-tcp",
+          "appProtocol": "http"
+        }
+      ],
+      "essential": true,
+      "environment": [
+        { "name": "PORT", "value": "5000" },
+        { "name": "DATABASE_URL", "value": "postgresql://claimguard:Claimguard_123@claimguard-postgres.cvm3eebajmti.us-east-1.rds.amazonaws.com:5432/claimguard?schema=public&uselibpqcompat=true&sslmode=require" },
+        { "name": "AWS_REGION", "value": "us-east-1" },
+        { "name": "AWS_S3_BUCKET_NAME", "value": "claimguard-evidence-2026" },
+        { "name": "COGNITO_USER_POOL_ID", "value": "us-east-1_eqz5APd3k" },
+        { "name": "COGNITO_CLIENT_ID", "value": "6aenlhb9gk7115pd9f2s4lj55e" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/claimguard-backend",
+          "awslogs-create-group": "true",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}

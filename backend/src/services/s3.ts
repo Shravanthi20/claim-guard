@@ -31,21 +31,7 @@ export const uploadToS3 = async (
     throw new Error("AWS_S3_BUCKET_NAME is not configured");
   }
 
-  if (process.env.NODE_ENV !== "production" && !hasExplicitCredentials) {
-    throw new Error(
-      "AWS credentials are not configured. Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in backend/.env"
-    );
-  }
 
-  if (
-    process.env.NODE_ENV !== "production" &&
-    usesTemporaryCredentials &&
-    !process.env.AWS_SESSION_TOKEN
-  ) {
-    throw new Error(
-      "AWS_SESSION_TOKEN is required when AWS_ACCESS_KEY_ID starts with ASIA"
-    );
-  }
 
   await s3.send(
     new PutObjectCommand({

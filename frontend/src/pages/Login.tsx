@@ -159,29 +159,11 @@ function Login() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#f5f7fa",
-      }}
-    >
-      <div
-        style={{
-          width: "400px",
-          padding: "32px",
-          background: "white",
-          borderRadius: "12px",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-        }}
-      >
-        <h1 style={{ marginBottom: "8px" }}>
-          ClaimGuard AI
-        </h1>
+    <div className="login-page">
+      <div className="login-card">
+        <h1>ClaimGuard <span>AI</span></h1>
 
-        <p style={{ color: "#666", marginBottom: "24px" }}>
+        <p>
           Insurance Claim Investigation Platform
         </p>
 
@@ -189,7 +171,7 @@ function Login() {
           <>
             <h2>Confirm Your Account</h2>
 
-            <p style={{ color: "#666" }}>
+            <p className="muted">
               Enter the confirmation code sent to:
             </p>
 
@@ -204,25 +186,15 @@ function Login() {
               onChange={(e) =>
                 setConfirmationCode(e.target.value)
               }
-              style={inputStyle}
             />
 
-            {error && (
-              <p style={{ color: "red" }}>
-                {error}
-              </p>
-            )}
-
-            {message && (
-              <p style={{ color: "green" }}>
-                {message}
-              </p>
-            )}
+            {error && <p className="alert error">{error}</p>}
+            {message && <p className="form-message">{message}</p>}
 
             <button
               onClick={handleConfirmSignUp}
               disabled={loading}
-              style={buttonStyle}
+              className="button"
             >
               {loading
                 ? "Confirming..."
@@ -236,7 +208,7 @@ function Login() {
                 setError("");
                 setMessage("");
               }}
-              style={secondaryButtonStyle}
+              className="secondary-button"
             >
               Back to Login
             </button>
@@ -253,12 +225,11 @@ function Login() {
                 placeholder="Full name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                style={inputStyle}
               />
             )}
 
             {isSignUp && (
-              <p style={{ color: "#666", fontSize: "13px", marginBottom: "14px" }}>
+              <p className="muted" style={{ fontSize: "13px", marginBottom: "14px" }}>
                 New accounts start as Customer. An administrator can grant Investigator access after registration.
               </p>
             )}
@@ -268,7 +239,6 @@ function Login() {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              style={inputStyle}
             />
 
             <input
@@ -276,20 +246,10 @@ function Login() {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              style={inputStyle}
             />
 
-            {error && (
-              <p style={{ color: "red" }}>
-                {error}
-              </p>
-            )}
-
-            {message && (
-              <p style={{ color: "green" }}>
-                {message}
-              </p>
-            )}
+            {error && <p className="alert error">{error}</p>}
+            {message && <p className="form-message">{message}</p>}
 
             <button
               onClick={
@@ -298,7 +258,7 @@ function Login() {
                   : handleSignIn
               }
               disabled={loading}
-              style={buttonStyle}
+              className="button"
             >
               {loading
                 ? "Please wait..."
@@ -309,7 +269,7 @@ function Login() {
 
             <button
               onClick={switchMode}
-              style={secondaryButtonStyle}
+              className="secondary-button"
             >
               {isSignUp
                 ? "Already have an account? Sign In"
@@ -321,37 +281,5 @@ function Login() {
     </div>
   );
 }
-
-const inputStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "12px",
-  marginBottom: "14px",
-  border: "1px solid #ddd",
-  borderRadius: "6px",
-  boxSizing: "border-box",
-  fontSize: "14px",
-};
-
-const buttonStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "12px",
-  background: "#2563eb",
-  color: "white",
-  border: "none",
-  borderRadius: "6px",
-  cursor: "pointer",
-  fontSize: "15px",
-  marginBottom: "10px",
-};
-
-const secondaryButtonStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "10px",
-  background: "transparent",
-  color: "#2563eb",
-  border: "none",
-  cursor: "pointer",
-  fontSize: "14px",
-};
 
 export default Login;
